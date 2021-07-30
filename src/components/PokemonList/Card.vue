@@ -1,6 +1,6 @@
 <template>
   <div class="poke-card">
-    <CardImage :imageUrl="imageUrl" :pokeData="pokeData" @loaded="imageLoaded" />
+    <CardImage :imageUrl="imageUrl" :pokeData="pokeData" />
     <span>{{ pokeData.name }}</span>
   </div>
 </template>
@@ -21,17 +21,6 @@ export default {
       imageUrl: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/",
       readyImageCounter: 4
     };
-  },
-  methods: {
-    imageLoaded() {
-      this.incrementImageCounter();
-    },
-    incrementImageCounter() {
-      this.readyImageCounter = this.readyImageCounter * 10;
-      console.log(this.readyImageCounter);
-      this.readyImageCounter = this.readyImageCounter * 10;
-      console.log(this.readyImageCounter);
-    }
   }
 };
 </script>
