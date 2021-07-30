@@ -21,11 +21,13 @@ export default {
   data() {
     return {
       pokemons: [],
+      loading: true
     };
   },
   methods: {
     fetchPokemons() {
       axios.get("https://pokeapi.co/api/v2/pokemon?limit=151").then((res) => {
+        this.loading = false;
         res.data.results.forEach((pokemon) => {
           pokemon.id = pokemon.url
             .replace("https://pokeapi.co/api/v2/pokemon/", "")
