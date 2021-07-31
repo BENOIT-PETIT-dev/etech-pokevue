@@ -1,5 +1,6 @@
 <template>
-	<div class="grid-container">
+  <span v-if="loading">Loading...</span>
+	<div v-else class="grid-container">
 		<Card 
 			v-for="pokemon in pokemons" 
 			:key="pokemon.id" 
