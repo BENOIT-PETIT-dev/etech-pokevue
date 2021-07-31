@@ -1,8 +1,7 @@
 <template>
   <img 
       :src="imageUrl + pokeData.id + '.png'" 
-      :alt="pokeData.name" 
-      @load="this.$emit('loaded')" />
+      :alt="pokeData.name" />
 </template>
 
 <script>

@@ -1,8 +1,8 @@
 <template>
-  <span v-if="loading">Loading...</span>
+  <Spinner v-if="loading" />
 	<div v-else class="grid-container">
 		<Card 
-			v-for="pokemon in pokemons" 
+			v-for="pokemon in allPokemons" 
 			:key="pokemon.id" 
 			:pokeData="pokemon"
 			@click="goToPokemon(pokemon.id)" />
@@ -10,39 +10,28 @@
 </template>
 
 <script>
-import axios from "axios";
+import { mapGetters, mapActions } from "vuex";
 import router from '../../router';
 import Card from "./Card.vue";
+import Spinner from "../utils/Spinner.vue";
 
 export default {
   name: "PokemonList",
   components: {
     Card,
+    Spinner
   },
-  data() {
-    return {
-      pokemons: [],
-      loading: true
-    };
+  computed: {
+    ...mapGetters(["allPokemons", "loading"])
   },
   methods: {
-    fetchPokemons() {
-      axios.get("https://pokeapi.co/api/v2/pokemon?limit=151").then((res) => {
-        this.loading = false;
-        res.data.results.forEach((pokemon) => {
-          pokemon.id = pokemon.url
-            .replace("https://pokeapi.co/api/v2/pokemon/", "")
-            .replace("/", "");
-          this.pokemons.push(pokemon);
-        });
-      });
-    },
+    ...mapActions(["fetchAllPokemons"]),
 		goToPokemon(pokeId) {
 			router.push({ path: `/pokemon/${pokeId}` })
 		}
   },
-  mounted() {
-    this.fetchPokemons();
+  created() {
+    this.fetchAllPokemons();
   },
 };
 </script>

@@ -1,6 +1,6 @@
 <template>
   <main class="pokemon">
-    <Link path="/" />
+    <span class="return" @click="goToHome">Retour</span>
     <section class="pokemon-container">
       <PokemonInfos />
     </section>
@@ -8,17 +8,25 @@
 </template>
 
 <script>
+import router from '../router';
 import PokemonInfos from '../components/Pokemon/PokemonInfos.vue';
-import Link from '../components/utils/Link/Link.vue';
 
 export default {
   name: 'Pokemon',
   components: {
     PokemonInfos,
-    Link
+  },
+  methods: {
+    goToHome() {
+      router.push({ path: "/" });
+    }
   }
 }
 </script>
 
 <style>
+.return {
+  text-decoration: underline;
+  cursor: pointer;
+}
 </style>

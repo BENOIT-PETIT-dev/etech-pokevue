@@ -1,70 +1,50 @@
 <template>
-  <span v-if="loading">Loading...</span>
+  <Spinner v-if="loading" />
   <div v-else class="pokemon">
     <span class="name">{{ pokemon.name }}</span>
     <CardImage :imageUrl="imageUrl" :pokeData="pokemon" />
     <ul class="abilities">
-      <li v-for="(ability, index) in abilities" :key="index">
+      <li v-for="(ability, index) in pokemon.abilities" :key="index">
         <span class="ability__name">{{ ability.abilityName }}</span>
         <button @click="toggleShowEffect(index)" class="ability__detail">
           <span v-if="!ability.isShownEffect">détail</span>
           <span v-else>réduire</span>
         </button>
-        <span v-show="ability.isShownEffect" class="ability__effect">{{ ability.shortEffect }}</span>
+        <span v-show="$store.state.pokemon.abilities[index].isShownEffect" class="ability__effect">{{ ability.shortEffect }}</span>
       </li>
     </ul>
   </div>
 </template>
 
 <script>
-import axios from "axios";
+import { mapGetters, mapActions } from "vuex";
 import CardImage from "../PokemonList/CardImage.vue";
+import Spinner from "../utils/Spinner.vue";
 
 export default {
   name: "PokemonInfos",
   components: {
-    CardImage
+    CardImage,
+    Spinner
   },
   data() {
     return {
-      pokemon: "",
-      abilities: [],
-			currentPokemonUrl: "",
-			loading: true,
       imageUrl: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/"
     };
   },
+  computed: {
+    ...mapGetters(["pokemon", "loading"])
+  },
   methods: {
-    fetchPokemon(id) {
-      axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`).then((res) => {
-        this.pokemon = res.data;
-        const abilities = res.data.abilities;
-
-        abilities.forEach((abilityParam) => {
-          axios.get(abilityParam.ability.url).then((res) => {
-            const abilityName = abilityParam.ability.name.replace("-", " ");
-            const shortEffect = res.data.effect_entries[1].short_effect;
-
-            this.abilities.push({abilityName, shortEffect, isShownEffect: false});
-
-            if (this.abilities.length >= abilities.length) {
-              this.loading = false;
-            }
-          });
-        });
-      });
-    },
-    setCurrentPokemonUrl() {
-			this.currentPokemonUrl = this.$route.params.id
-		},
+    ...mapActions(["fetchPokemon", "setLoading", "handleAbilityShown"]),
     toggleShowEffect(id) {
-      this.abilities[id].isShownEffect = !this.abilities[id].isShownEffect;
+      this.handleAbilityShown(id);
     }
   },
-  mounted() {
-		this.currentPokemonUrl = this.$route.params.id
-    this.fetchPokemon(this.currentPokemonUrl);
-  },
+  created() {
+    this.fetchPokemon(this.$route.params.id);
+    this.setLoading(true);
+  }
 };
 </script>
 
