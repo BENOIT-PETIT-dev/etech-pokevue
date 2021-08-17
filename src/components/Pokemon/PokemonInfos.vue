@@ -2,7 +2,7 @@
   <Spinner v-if="loading" />
   <div v-else class="pokemon">
     <span class="name">{{ pokemon.name }}</span>
-    <CardImage :imageUrl="imageUrl" :pokeData="pokemon" />
+    <CardImage :pokeData="pokemon" />
     <ul class="abilities">
       <li v-for="(ability, index) in pokemon.abilities" :key="index">
         <span class="ability__name">{{ ability.abilityName }}</span>
@@ -27,11 +27,6 @@ export default {
     CardImage,
     Spinner
   },
-  data() {
-    return {
-      imageUrl: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/"
-    };
-  },
   computed: {
     ...mapGetters(["pokemon", "loading"])
   },
@@ -41,7 +36,7 @@ export default {
       this.handleAbilityShown(id);
     }
   },
-  created() {
+  mounted() {
     this.fetchPokemon(this.$route.params.id);
     this.setLoading(true);
   }

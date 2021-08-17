@@ -1,6 +1,6 @@
 <template>
   <div class="poke-card">
-    <CardImage :imageUrl="imageUrl" :pokeData="pokeData" />
+    <CardImage :pokeData="pokeData" />
     <span>{{ pokeData.name }}</span>
   </div>
 </template>
@@ -15,11 +15,6 @@ export default {
   },
   props: {
     pokeData: Object,
-  },
-  data() {
-    return {
-      imageUrl: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/",
-    };
   }
 };
 </script>

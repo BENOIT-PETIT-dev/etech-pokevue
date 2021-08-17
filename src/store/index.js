@@ -29,17 +29,26 @@ const store = createStore({
         });
   
         commit('setAllPokemons', pokemons);
-        commit('setLoading', false);
+        // commit('setLoading', false);
       }
       catch(error) {
-        commit('setLoading', false);
+        // commit('setLoading', false);
       }
     },
     async fetchPokemon({ commit }, id) {
       try {
         const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`);
         const completeAbilities = response.data.abilities;
-        const filteredAbilities = await fetchPokemonAbilities(completeAbilities);        
+        let filteredAbilities = [];
+    
+        for (let abilitySet of completeAbilities) {
+          const abilitiesResponse = await axios.get(abilitySet.ability.url);
+          const abilityName = abilitySet.ability.name.replace("-", " ");
+          const shortEffect = await abilitiesResponse.data.effect_entries[1].short_effect;
+          
+          filteredAbilities.push({abilityName, shortEffect, isShownEffect: false});
+        }
+
         const pokemon = {id: id, name: response.data.name, abilities: filteredAbilities};
         
         commit('setPokemon', pokemon);
@@ -60,19 +69,5 @@ const store = createStore({
     setAbilityShow: (state, id) => (state.pokemon.abilities[id].isShownEffect = !state.pokemon.abilities[id].isShownEffect)
   }
 });
-
-async function fetchPokemonAbilities(abilities) {
-  let filteredAbilities = [];
-    
-  for (let abilitySet of abilities) {
-    const abilitiesResponse = await axios.get(abilitySet.ability.url);
-    const abilityName = abilitySet.ability.name.replace("-", " ");
-    const shortEffect = await abilitiesResponse.data.effect_entries[1].short_effect;
-    
-    filteredAbilities.push({abilityName, shortEffect, isShownEffect: false});
-  }
-
-  return filteredAbilities;
-}
 
 export default store;

@@ -21,6 +21,11 @@ export default {
     Card,
     Spinner
   },
+  data() {
+    return {
+      loading: true
+    }
+  },
   computed: {
     ...mapGetters(["allPokemons", "loading"])
   },
@@ -31,7 +36,13 @@ export default {
 		}
   },
   created() {
-    this.fetchAllPokemons();
+    try {
+      this.fetchAllPokemons();
+      this.loading = false
+    }
+    catch {
+      this.loading = false
+    }
   },
 };
 </script>
