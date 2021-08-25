@@ -1,4 +1,5 @@
-# etech-vue
+# pokeApi
+pokeApi project for e-tech company in Vue.js
 
 ## Project setup
 ```
